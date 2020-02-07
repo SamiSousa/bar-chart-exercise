@@ -3,6 +3,7 @@ import React, {Component} from 'react';
 import './BarChart.css';
 
 // Find the largest value in the data
+/*
 const maxValueOfDict = (dict) => {
   let max = undefined;
   Object.keys(dict).forEach(key => {
@@ -15,6 +16,20 @@ const maxValueOfDict = (dict) => {
 
   return max ? max : 1;
 };
+*/
+const maxValueOfListOfDicts = list => {
+  let max = undefined;
+  list.forEach(({value}) => {
+    if (max === undefined) {
+      max = value;
+    }
+    if (value > max) {
+      max = value;
+    }
+  });
+
+  return max ? max : 1;
+};
 
 const Bar = ({name, value, largestValue}) => {
   // Don't bother if dividing by zero
@@ -22,7 +37,7 @@ const Bar = ({name, value, largestValue}) => {
     return null;
   }
 
-  // Calculate the width of the 
+  // Calculate the width of the bar
   const percentWidth = (70*value/largestValue)
 
   return (
@@ -47,14 +62,13 @@ class BarChart extends Component {
     const {data} = props;
 
     this.state = {
-      largestValue: maxValueOfDict(data),
-      filter: '',
+      largestValue: maxValueOfListOfDicts(data),
     }
   }
 
   componentDidUpdate(_, prevState) {
     // Update largestValue if max is different on new props
-    const newLargest = maxValueOfDict(this.props.data);
+    const newLargest = maxValueOfListOfDicts(this.props.data);
 
     if (prevState.largestValue !== newLargest) {
       this.setState({
@@ -63,47 +77,22 @@ class BarChart extends Component {
     }
   }
 
-  updateFilter = (e) => {
-    this.setState({
-      filter: e.target.value,
-    });
-  };
-
   render() {
     const {data} = this.props;
-    const {
-      largestValue,
-      filter,
-    } = this.state;
+    const {largestValue} = this.state;
 
     return (
       <React.Fragment>
-        <div>
-          Bar Chart
-        </div>
 
-        <input
-          type='text'
-          name='filter'
-          value={filter}
-          onChange={this.updateFilter}
-          className='filter-input'
-        />
-
-        {Object.keys(data).map((name) => {
-
-          if (filter && filter.length > 0) {
-            if (!name.includes(filter)) {
-              return null;
-            }
-          }
-
-          return <Bar
+        {data.map(({name, value}) => 
+          <Bar
+            key={name}
             name={name}
-            value={data[name]}
+            value={value}
             largestValue={largestValue}
           />
-        })}
+        )}
+
       </React.Fragment>
     );
   }

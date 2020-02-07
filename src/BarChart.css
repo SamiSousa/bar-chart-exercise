@@ -1,21 +1,23 @@
 
 .bar-chart {
-  display: table;
   width: 100%;
+  padding: 10px 0;
 }
 
 .bar-name {
   width: 15%;
   text-align: right;
-  margin: 15px;
+  vertical-align: center;
+  padding: 0 10px;
   display: inline-block;
+  float: left;
 }
 
 .bar-value {
   background-color: red;
   text-align: left;
-  height: 30px;
   display: inline-block;
+  float: left
 }
 
 .bar-innervalue {
@@ -23,5 +25,5 @@
 }
 
 .filter-input {
-  
+
 }
